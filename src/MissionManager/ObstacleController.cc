@@ -428,7 +428,7 @@ void ObstacleController::addInclusionPolygon(QGeoCoordinate topLeft, QGeoCoordin
     bottomLeft =        center.atDistanceAndAzimuth(halfWidthMeters, -90).atDistanceAndAzimuth(halfHeightMeters, 180);
     bottomRight =       center.atDistanceAndAzimuth(halfWidthMeters, 90).atDistanceAndAzimuth(halfHeightMeters, 180);
 
-    QGCFencePolygon* polygon = new QGCFencePolygon(true /* inclusion */, this);
+    QGCFencePolygon* polygon = new QGCFencePolygon(false /* inclusion */, this);
     polygon->appendVertex(topLeft);
     polygon->appendVertex(topRight);
     polygon->appendVertex(bottomRight);
@@ -453,7 +453,7 @@ void ObstacleController::addInclusionCircle(QGeoCoordinate topLeft, QGeoCoordina
     QGeoCoordinate centerTopEdge = topLeft.atDistanceAndAzimuth(halfWidthMeters, 90);
     QGeoCoordinate center(centerLeftEdge.latitude(), centerTopEdge.longitude());
 
-    QGCFenceCircle* circle = new QGCFenceCircle(center, radius, true /* inclusion */, this);
+    QGCFenceCircle* circle = new QGCFenceCircle(center, radius, false /* inclusion */, this);
     _circles.append(circle);
 
     clearAllInteractive();

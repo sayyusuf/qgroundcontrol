@@ -44,6 +44,7 @@ Item {
     property var    _planMasterController:              planMasterController
     property var    _missionController:                 _planMasterController.missionController
     property var    _geoFenceController:                _planMasterController.geoFenceController
+    property var    _obstacleController:                _planMasterController.obstacleController
     property var    _rallyPointController:              _planMasterController.rallyPointController
     property var    _visualItems:                       _missionController.visualItems
     property bool   _lightWidgetBorders:                editorMap.isSatelliteMap
@@ -55,11 +56,12 @@ Item {
     property var    _planViewSettings:                  QGroundControl.settingsManager.planViewSettings
     property bool   _promptForPlanUsageShowing:         false
 
-    readonly property var       _layers:                [_layerMission, _layerGeoFence, _layerRallyPoints]
+    readonly property var       _layers:                [_layerMission, _layerGeoFence, _layerRallyPoints, _layerObstacle]
 
     readonly property int       _layerMission:              1
     readonly property int       _layerGeoFence:             2
     readonly property int       _layerRallyPoints:          3
+    readonly property int       _layerObstacle:             4
     readonly property string    _armedVehicleUploadPrompt:  qsTr("Vehicle is currently armed. Do you want to upload the mission to the vehicle?")
 
     function mapCenter() {
@@ -525,6 +527,15 @@ Item {
                 planView:               true
                 opacity:                _editingLayer != _layerRallyPoints ? editorMap._nonInteractiveOpacity : 1
             }
+            
+            ObstacleMapVisuals {
+                map:                    editorMap
+                myObstacleController:   _obstacleController
+                interactive:            _editingLayer == _layerObstacle
+                homePosition:           _missionController.plannedHomePosition
+                planView:               true
+                opacity:                _editingLayer != _layerObstacle ? editorMap._nonInteractiveOpacity : 1
+            }
 
             // Airspace overlap support
             MapItemView {
@@ -766,6 +777,9 @@ Item {
                         text:       qsTr("Rally")
                         enabled:    _rallyPointController.supported
                     }
+                    QGCTabButton {
+                        text:       qsTr("Obstacle")
+                    }
                 }
             }
             //-------------------------------------------------------
@@ -840,6 +854,16 @@ Item {
                 visible:                _editingLayer == _layerRallyPoints && _rallyPointController.points.count
                 rallyPoint:             _rallyPointController.currentRallyPoint
                 controller:             _rallyPointController
+            }
+            ObstacleEditor {
+                anchors.top:            rightControls.bottom
+                anchors.topMargin:      ScreenTools.defaultFontPixelHeight * 0.25
+                anchors.bottom:         parent.bottom
+                anchors.left:           parent.left
+                anchors.right:          parent.right
+                myObstacleController:   _obstacleController
+                flightMap:              editorMap
+                visible:                _editingLayer == _layerObstacle
             }
         }
 
