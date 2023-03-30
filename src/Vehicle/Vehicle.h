@@ -43,6 +43,7 @@
 #include "VehicleLinkManager.h"
 #include "MissionManager.h"
 #include "GeoFenceManager.h"
+#include "ObstacleManager.h"
 #include "RallyPointManager.h"
 #include "FTPManager.h"
 #include "ImageProtocolManager.h"
@@ -702,6 +703,7 @@ public:
 
     MissionManager*                 missionManager      () { return _missionManager; }
     GeoFenceManager*                geoFenceManager     () { return _geoFenceManager; }
+    ObstacleManager*                obstacleManager     () { return _obstacleManager; }
     RallyPointManager*              rallyPointManager   () { return _rallyPointManager; }
     ParameterManager*               parameterManager    () { return _parameterManager; }
     ParameterManager*               parameterManager    () const { return _parameterManager; }
@@ -999,6 +1001,7 @@ private slots:
     void _prearmErrorTimeout                ();
     void _firstMissionLoadComplete          ();
     void _firstGeoFenceLoadComplete         ();
+    void _firstObstacleLoadComplete         ();
     void _firstRallyPointLoadComplete       ();
     void _sendMavCommandResponseTimeoutCheck();
     void _clearCameraTriggerPoints          ();
@@ -1053,6 +1056,7 @@ private:
     void _handleADSBVehicle             (const mavlink_message_t& message);
     void _missionManagerError           (int errorCode, const QString& errorMsg);
     void _geoFenceManagerError          (int errorCode, const QString& errorMsg);
+    void _obstacleManagerError          (int errorCode, const QString& errorMsg);
     void _rallyPointManagerError        (int errorCode, const QString& errorMsg);
     void _say                           (const QString& text);
     QString _vehicleIdSpeech            ();
@@ -1379,6 +1383,7 @@ private:
 
     MissionManager*                 _missionManager             = nullptr;
     GeoFenceManager*                _geoFenceManager            = nullptr;
+    ObstacleManager*                _obstacleManager            = nullptr;
     RallyPointManager*              _rallyPointManager          = nullptr;
     VehicleLinkManager*             _vehicleLinkManager         = nullptr;
     FTPManager*                     _ftpManager                 = nullptr;

@@ -13,6 +13,7 @@
 
 #include "MissionController.h"
 #include "GeoFenceController.h"
+#include "ObstacleController.h"
 #include "RallyPointController.h"
 #include "Vehicle.h"
 #include "MultiVehicleManager.h"
@@ -40,6 +41,7 @@ public:
     Q_PROPERTY(Vehicle*                 managerVehicle          READ managerVehicle                         NOTIFY managerVehicleChanged)   ///< Either active vehicle or _controllerVehicle if no active vehicle
     Q_PROPERTY(MissionController*       missionController       READ missionController                      CONSTANT)
     Q_PROPERTY(GeoFenceController*      geoFenceController      READ geoFenceController                     CONSTANT)
+    Q_PROPERTY(ObstacleController*      obstacleController      READ obstacleController                     CONSTANT)
     Q_PROPERTY(RallyPointController*    rallyPointController    READ rallyPointController                   CONSTANT)
     Q_PROPERTY(bool                     offline                 READ offline                                NOTIFY offlineChanged)          ///< true: controller is not connected to an active vehicle
     Q_PROPERTY(bool                     containsItems           READ containsItems                          NOTIFY containsItemsChanged)    ///< true: Elemement is non-empty
@@ -83,6 +85,7 @@ public:
 
     MissionController*      missionController(void)     { return &_missionController; }
     GeoFenceController*     geoFenceController(void)    { return &_geoFenceController; }
+    ObstacleController*     obstacleController(void)    { return &_obstacleController; }
     RallyPointController*   rallyPointController(void)  { return &_rallyPointController; }
 
     bool        offline         (void) const { return _offline; }
@@ -108,6 +111,7 @@ public:
     static const char*  kPlanFileType;
     static const char*  kJsonMissionObjectKey;
     static const char*  kJsonGeoFenceObjectKey;
+    static const char*  kJsonObstacleObjectKey;
     static const char*  kJsonRallyPointsObjectKey;
 
 signals:
@@ -124,9 +128,11 @@ private slots:
     void _activeVehicleChanged      (Vehicle* activeVehicle);
     void _loadMissionComplete       (void);
     void _loadGeoFenceComplete      (void);
+    void _loadObstacleComplete      (void);
     void _loadRallyPointsComplete   (void);
     void _sendMissionComplete       (void);
     void _sendGeoFenceComplete      (void);
+    void _sendObstacleComplete      (void);
     void _sendRallyPointsComplete   (void);
     void _updatePlanCreatorsList    (void);
 #if defined(QGC_AIRMAP_ENABLED)
@@ -144,10 +150,13 @@ private:
     bool                    _offline =                  true;
     MissionController       _missionController;
     GeoFenceController      _geoFenceController;
+    ObstacleController      _obstacleController;
     RallyPointController    _rallyPointController;
     bool                    _loadGeoFence =             false;
+    bool                    _loadObstacle =             false;
     bool                    _loadRallyPoints =          false;
     bool                    _sendGeoFence =             false;
+    bool                    _sendObstacle =             false;
     bool                    _sendRallyPoints =          false;
     QString                 _currentPlanFile;
     bool                    _deleteWhenSendCompleted =  false;

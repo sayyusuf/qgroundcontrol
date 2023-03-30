@@ -606,6 +606,8 @@ HEADERS += \
     src/MissionManager/FixedWingLandingComplexItem.h \
     src/MissionManager/GeoFenceController.h \
     src/MissionManager/GeoFenceManager.h \
+    src/MissionManager/ObstacleController.h \
+    src/MissionManager/ObstacleManager.h \
     src/MissionManager/KMLPlanDomDocument.h \
     src/MissionManager/LandingComplexItem.h \
     src/MissionManager/MissionCommandList.h \
@@ -868,6 +870,8 @@ SOURCES += \
     src/MissionManager/FixedWingLandingComplexItem.cc \
     src/MissionManager/GeoFenceController.cc \
     src/MissionManager/GeoFenceManager.cc \
+    src/MissionManager/ObstacleController.cc \
+    src/MissionManager/ObstacleManager.cc \
     src/MissionManager/KMLPlanDomDocument.cc \
     src/MissionManager/LandingComplexItem.cc \
     src/MissionManager/MissionCommandList.cc \

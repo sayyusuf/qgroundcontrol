@@ -25,6 +25,7 @@
 #include "MissionController.h"
 #include "PlanMasterController.h"
 #include "GeoFenceManager.h"
+#include "ObstacleManager.h"
 #include "RallyPointManager.h"
 #include "FlightPathSegment.h"
 #include "QGCApplication.h"
@@ -399,8 +400,11 @@ void Vehicle::_commonInit()
 
     // GeoFenceManager needs to access ParameterManager so make sure to create after
     _geoFenceManager = new GeoFenceManager(this);
+    _obstacleManager = new ObstacleManager(this);
     connect(_geoFenceManager, &GeoFenceManager::error,          this, &Vehicle::_geoFenceManagerError);
     connect(_geoFenceManager, &GeoFenceManager::loadComplete,   this, &Vehicle::_firstGeoFenceLoadComplete);
+    connect(_obstacleManager, &ObstacleManager::error,          this, &Vehicle::_obstacleManagerError);
+    connect(_obstacleManager, &ObstacleManager::loadComplete,   this, &Vehicle::_firstObstacleLoadComplete);
 
     _rallyPointManager = new RallyPointManager(this);
     connect(_rallyPointManager, &RallyPointManager::error,          this, &Vehicle::_rallyPointManagerError);
@@ -2285,6 +2289,12 @@ void Vehicle::_geoFenceManagerError(int errorCode, const QString& errorMsg)
     qgcApp()->showAppMessage(tr("GeoFence transfer failed. Error: %1").arg(errorMsg));
 }
 
+void Vehicle::_obstacleManagerError(int errorCode, const QString& errorMsg)
+{
+    Q_UNUSED(errorCode);
+    qgcApp()->showAppMessage(tr("Obstacle transfer failed. Error: %1").arg(errorMsg));
+}
+
 void Vehicle::_rallyPointManagerError(int errorCode, const QString& errorMsg)
 {
     Q_UNUSED(errorCode);
@@ -2335,6 +2345,12 @@ void Vehicle::_firstMissionLoadComplete()
 void Vehicle::_firstGeoFenceLoadComplete()
 {
     disconnect(_geoFenceManager, &GeoFenceManager::loadComplete, this, &Vehicle::_firstGeoFenceLoadComplete);
+    _initialConnectStateMachine->advance();
+}
+
+void Vehicle::_firstObstacleLoadComplete()
+{
+    disconnect(_obstacleManager, &ObstacleManager::loadComplete, this, &Vehicle::_firstObstacleLoadComplete);
     _initialConnectStateMachine->advance();
 }
 
